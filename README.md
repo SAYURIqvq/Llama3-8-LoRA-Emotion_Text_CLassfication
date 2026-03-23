@@ -20,11 +20,15 @@
 ## 技术方案
 
 ### 模型
+
 <div align="center">
 <img src="fig1.png" width="300">
 </div>
+
 * 基座模型：Llama3-8B
+* 
 * 微调方式：LoRA（参数高效微调）
+* 
 * 注意力优化：FlashAttention V2
 
 ### 训练方法
