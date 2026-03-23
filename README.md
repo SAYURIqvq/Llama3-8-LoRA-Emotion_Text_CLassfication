@@ -20,7 +20,9 @@
 ## 技术方案
 
 ### 模型
-
+<div align="center">
+<img src="fig1.png" width="300">
+</div>
 * 基座模型：Llama3-8B
 * 微调方式：LoRA（参数高效微调）
 * 注意力优化：FlashAttention V2
@@ -76,7 +78,9 @@ LoRA 通过引入低秩矩阵对模型进行微调：
 * 显著降低显存占用
 * 提高训练效率
 * 推理阶段无额外开销
-
+<div align="center">
+<img src="fig2.png" width="400">
+</div>
 ---
 
 ### FlashAttention
@@ -94,8 +98,10 @@ FlashAttention 用于优化 Transformer 注意力计算：
 使用六分类情感文本数据集，类别包括：
 
 * joy / sadness / anger / fear / love / surprise
-
-数据分布相对均衡，有助于模型稳定训练。
+<div align="center">
+<img src="fig3.png" width="500">
+</div>
+可以看到，数据分布相对均衡，其中 joy 和 sadness 占比较高，surprise 较少。
 
 ---
 
