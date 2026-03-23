@@ -1,22 +1,28 @@
 
-# Emotion Text Classification Using Llama3-8b and LoRA
+# 基于 Llama3-8B 与 LoRA 的情感文本分类
 
-## Introduction
+## 项目介绍
 
-This project explores emotion text classification using the Llama3-8b model, enhanced with LoRA and FlashAttention techniques. The model is optimized for identifying six emotion categories: joy, sadness, anger, fear, love, and surprise. The Llama3-8b model demonstrates superior performance with an accuracy of 0.9262, surpassing other transformer models such as Bert-Base, Bert-Large, Roberta-Base, and Roberta-Large.
+本项目基于 Llama3-8B 大语言模型，结合 LoRA（Low-Rank Adaptation） 和 FlashAttention 技术，实现情感文本分类任务。模型用于识别六类情绪：
 
-## Background
+·喜悦（joy）
+·悲伤（sadness）
+·愤怒（anger）
+·恐惧（fear）
+·爱（love）
+·惊讶（surprise）
 
-Natural Language Processing (NLP) has become a key focus area for sentiment analysis, also known as sentiment classification or sentiment detection. This technology helps businesses understand consumer emotions and opinions, enhancing customer satisfaction and product development. The vast amount of data in large companies makes manual analysis impractical, leading to the adoption of AI and NLP algorithms.
+实验结果表明，该方法在该任务上取得 0.9262 的准确率，优于 Bert-Base、Bert-Large、Roberta-Base、Roberta-Large 等主流模型。
 
-## Key Features
+## 特性
 
-- **Model**: Llama3-8b, fine-tuned using supervised learning.
-- **Techniques**: Utilized LoRA for efficient parameter tuning and FlashAttention for optimized attention computation.
-- **Dataset**: Emotion text dataset with six categories.
-- **Performance**: Achieved an accuracy of 0.9262, surpassing other NLP models.
+- **模型**: Llama3-8B（通过监督学习进行微调）
+- **训练方式**: LoRA（高效参数微调）
+- **优化技术**: FlashAttention（提升注意力计算效率）
+- **数据集**: 六分类情感文本数据集
+- **性能**: 准确率达到 0.9262，优于多个NLP模型
 
-## Methods
+## 方法
 
 <div align="center">
     <img src="fig1.png" alt="Architecture of Llama3-8b" width="250">
@@ -24,15 +30,33 @@ Natural Language Processing (NLP) has become a key focus area for sentiment anal
     <b>Figure 1: Architecture of Llama3-8b</b>
 </div>
 
-### Llama3-8b Model
+### 模型结构（Llama3-8B）
 
-The Llama3-8b model, developed by Meta AI, is a large language model optimized for dialogue use cases. It contains 8 billion parameters and features significant improvements over previous models. The Llama3 series incorporates a multi-phase training process that includes pretraining, supervised fine-tuning, and iterative refinement using reinforcement learning with human feedback (RLHF). This process ensures that the model aligns closely with human preferences for helpfulness and safety.
+Llama3-8B 是 Meta 开发的大语言模型，具有约 80 亿参数，针对对话任务进行了优化。
 
+其训练流程包括：
 
+1️⃣ 预训练（Pretraining）
+2️⃣ 指令微调（SFT）
+3️⃣ 基于人类反馈的强化学习（RLHF）
 
-The architectural advancements in Llama3 include the implementation of Grouped-Query Attention (GQA). GQA clusters queries to share key-value pairs, thus reducing memory and computational costs while maintaining high performance. This method significantly enhances the efficiency of attention calculations, particularly in large-scale models.
+该流程使模型在“有用性”和“安全性”方面更接近人类偏好。
 
-Llama3-8b is pretrained on a diverse dataset comprising more than 15 trillion tokens from publicly available data, with the model's knowledge cutoff set at March 2023. The fine-tuning phase utilized publicly available instruction datasets and over 10 million human-annotated examples, ensuring a robust understanding of various language tasks.
+### 架构优化（GQA）
+
+Llama3 引入了 Grouped-Query Attention（GQA）：
+
+· 多个 Query 共享 Key-Value
+· 降低显存占用
+· 提升计算效率
+
+项目	参数
+参数规模	8B
+上下文长度	8K
+训练数据	公共数据
+Token 数量	15T+
+知识截止时间	2023年3月
+GQA	支持
 
 
 <div align="center">
@@ -70,13 +94,22 @@ Llama3-8b is pretrained on a diverse dataset comprising more than 15 trillion to
 </div>
 
 
-### Instruction Fine-Tuning
+### 指令微调（Instruction Fine-Tuning）
 
-Instruction fine-tuning enhances the model's zero-shot learning capabilities across diverse tasks. This technique involves training the model on datasets specifically designed to improve its ability to follow instructions. For example, models trained on datasets like Alpaca-7B can exhibit behaviors similar to OpenAI's text-davinci-003 in understanding and executing instructions.
+指令微调通过专门构建的指令数据集，使模型具备更强的：
+· 零样本能力（zero-shot）
+· 指令理解能力
+例如类似 Alpaca 数据集，可以让模型表现接近 GPT 系列。
 
-### LoRA Method for Training
+### LoRA 微调方法
 
-LoRA (Low-Rank Adaptation) is a technique used to integrate trainable rank decomposition matrices into each layer of the Transformer architecture. This method significantly reduces the number of trainable parameters while adapting large language models to specific tasks or domains. Unlike full fine-tuning, LoRA keeps the pretrained model weights unchanged, updating only the low-rank matrices during the adaptation process. This approach enhances training efficiency, reduces storage needs, and does not increase inference latency compared to fully fine-tuned models.
+LoRA（Low-Rank Adaptation）通过在 Transformer 层中引入低秩矩阵来实现参数高效微调。
+
+其特点：
+· 不修改原始模型参数
+· 仅训练少量低秩参数
+· 显著降低显存和计算成本
+· 推理阶段无额外开销
 
 <div align="center">
     <img src="fig2.png" alt="LoRA Training Method" width="350">
@@ -86,11 +119,17 @@ LoRA (Low-Rank Adaptation) is a technique used to integrate trainable rank decom
 
 ### Flash Attention V2
 
-FlashAttention V2 is an optimization technique designed to accelerate the attention mechanism in Transformer models. It focuses on improving computational efficiency and reducing memory usage during training. FlashAttention achieves this by breaking down attention computation into smaller, more manageable chunks, thereby enhancing cache utilization and reducing memory access. Additionally, it employs sparse matrix operations to leverage the sparsity in attention mechanisms, which helps bypass unnecessary computations. Pipelined operations enable parallel execution of different computation stages, further minimizing processing time.
+FlashAttention V2 用于优化 Transformer 中的注意力计算：
+
+· 分块计算（减少内存访问）
+· 提高 cache 利用率
+· 支持流水线并行
+· 利用稀疏性减少计算量
+结果：显著提升训练和推理效率
 
 
 
-## Experimentation
+## 实验
 
 <div align="center">
     <img src="fig3.png" alt="Emotion Text Label Distribution" width="450">
