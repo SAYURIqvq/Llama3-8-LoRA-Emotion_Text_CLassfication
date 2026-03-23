@@ -80,9 +80,11 @@ LoRA 通过引入低秩矩阵对模型进行微调：
 * 显著降低显存占用
 * 提高训练效率
 * 推理阶段无额外开销
+  
 <div align="center">
 <img src="fig2.png" width="400">
 </div>
+
 ---
 
 ### FlashAttention
